@@ -1,0 +1,21 @@
+---
+- name: Setup grub for boot (EFI)
+  hosts: localhost
+  connection: local
+  vars:
+    boot_directory: /boot/efi
+    boot_partition: /dev/sda1
+  tasks:
+    - name: Create directory for boot
+      file:
+        dest: '{{ boot_directory }}'
+        state: directory
+
+    - name: Mount partition to boot directory
+      command: 'mount {{ boot_partition }} {{ boot_directory }}'
+
+    - name: Install grub
+      command: 'grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory={{ boot_directory }} --removable'
+
+    - name: Make grub configuration
+      command: grub-mkconfig -o /boot/grub/grub.cfg

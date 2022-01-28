@@ -1,0 +1,26 @@
+---
+- name: Setup swap on system
+  hosts: localhost
+  connection: local
+  vars:
+    swap_size: 4G
+  tasks:
+    - name: Allocate disk space to /swapfile
+      command: 'fallocate -l {{ swap_size }} /swapfile'
+
+    - name: Change mode for /swapfile
+      file:
+        dest: /swapfile
+        mode: 600
+
+    - name: Make file into swap type
+      command: mkswap /swapfile
+
+    - name: Turn swap on
+      command: swapon /swapfile
+
+    - name: Add swap to /etc/fstab to work on boot
+      lineinfile:
+        path: /etc/fstab
+        line: /swapfile none swap sw 0 0
+        insertafter: EOF

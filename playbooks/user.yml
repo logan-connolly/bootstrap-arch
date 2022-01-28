@@ -1,0 +1,31 @@
+---
+- name: Setup system user
+  hosts: localhost
+  connection: local
+  vars:
+    user: archie
+    group: users
+    groups: wheel,docker,nordvpn
+  tasks:
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
+
+    - name: Add user and group
+      user:
+        name: '{{ user }}'
+        password: changeme
+        shell: /usr/bin/zsh
+        group: '{{ group }}'
+        groups: '{{ groups }}'
+
+    - name: Add user to wheel group
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^# %wheel ALL=(ALL) ALL'
+        line: '%wheel ALL=(ALL) ALL'
+
+    - name: Enable networking manager
+      command: systemctl enable NetworkManger.service
