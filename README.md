@@ -1,17 +1,32 @@
-# Prerequisite commands
+# Bootstrap Arch
+
+Goal of this repo is to get setup with Arch as quickly as possible. It uses a combination of markup via this README.md and ansible playbooks to guide the installation and automate areas where it is possible to automate.
+
+Additional Resources for installing Arch:
+
+- https://wiki.archlinux.org/index.php/installation_guide
+- https://averagelinuxuser.com/a-step-by-step-arch-linux-installation-guide/
+
+# Installation
+
+## Initial setup
+
+Start archiso from a formatted USB drive and run the following commands:
 
 ```shell
-# Format drive (2 partitions)
+# Format drive into boot and os partitions:
+#  - sdX1: 512MB Linux filesystem
+#  - sdX2: *GB   Linux filesystem
 cfdisk /dev/sdX
 
-# Attach filesystems
+# Attach filesystems to partitions
 mkfs.fat -F32 /dev/sdX1
 mkfs.ext4 /dev/sdX2
 
-# Mount partitions
+# Mount os partition
 mount /dev/sdX2 /mnt
 
-# Install dependencies
+# Install system-wide dependencies
 system_deps="base base-devel linux linux-firmware"
 bootstrap_deps="sudo vim zsh git ansible networkmanager"
 boot_deps="grub efibootmgr"
@@ -26,16 +41,14 @@ arch-chroot /mnt /usr/bin/zsh
 # Set root password
 passwd
 ```
-
-# Clone bootstrap-arch
+## Clone repository
 
 ```shell
 cd /opt/
 git clone https://github.com/logan-connolly/bootstrap-arch.git
 cd bootstrap-arch
 ```
-
-# Root Playbooks
+## Ansible playbooks
 
 ```shell
 # Setup locale configuration
@@ -56,8 +69,7 @@ passwd archie
 # Exit out and login as non-root user
 exit
 ```
-
-# Setup Dotfiles
+## Install user dependencies
 
 ```shell
 # Install paru
@@ -66,20 +78,18 @@ git clone https://aur.archlinux.org/paru.git
 cd paru
 makepkg -si
 
-# Install user deps
-audio_deps="pulseaudio pulseaudio-alsa"
-server_deps="xorg xorg-xinit xorg-server"
-video_deps="xf86-video-intel"
-virtual_deps="virtualbox-guest-utils"
-desktop_deps="i3"
-sudo pacman -S $audio_deps $server_deps $video_deps $virtual_deps
+# Install audio dependencies
+paru -S pulseaudio pulseaudio-alsa
 
-# Create ssh key and copy public key to github
-ssh-keygen -t ed25519
+# Install X11 server
+paru -S xorg xorg-xinit xorg-server
 
-# Setup dotfiles
-mkdir -p ~/projects && cd ~/projects
-git clone https://github.com/logan-connolly/dotfiles.git
-cd dotfiles
-make setup
+# Install video card relevant for your hardware
+paru -S xf86-video-intel
+
+# Optional: install guest utils if installing in virtualbox
+paru -S virtualbox-guest-utils
 ```
+## Add configuration
+
+Now that there is a fresh install of Arch, you can add whatever desktop environment you want (i3, gnome, kde, etc.). I have detailed how I setup my environment in my [dotfiles](https://github.com/logan-connolly/dotfiles) if you are interested.
