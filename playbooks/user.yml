@@ -5,7 +5,6 @@
   vars:
     user: archie
     group: users
-    groups: wheel,docker,nordvpn
   tasks:
     - name: Make sure we have a 'wheel' group
       group:
@@ -18,7 +17,6 @@
         password: changeme
         shell: /usr/bin/zsh
         group: '{{ group }}'
-        groups: '{{ groups }}'
 
     - name: Add user to wheel group
       lineinfile:
