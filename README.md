@@ -98,17 +98,11 @@ cd paru
 makepkg -si
 ```
 
-## Install user dependencies
+## Install desktop dependencies
 
 ```shell
-# Install audio dependencies
-paru -S pulseaudio pulseaudio-alsa
-
-# Install X11 server
+# Install X11 display server
 paru -S xorg xorg-xinit xorg-server
-
-# Optional: Install video card relevant for your hardware
-paru -S xf86-video-intel
 
 # Optional: install guest utils if installing in virtualbox
 paru -S virtualbox-guest-utils
