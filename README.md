@@ -63,7 +63,7 @@ ansible-playbook ./playbooks/grub.yml
 
 # Exit out, unmount, reboot and login this time as root
 exit
-unmount -R /mnt
+umount -R /mnt
 reboot
 
 # Create swap file
@@ -77,28 +77,43 @@ passwd archie
 
 # exit again and login to newly created `archie` user
 exit
+
+# Optional: Remove ansible dependency and repo
+pacman -Rncs ansible
+rm -rf /opt/bootstrap-arch
 ```
-## Install user dependencies
+
+## Install paru (package manager)
 
 ```shell
-# Install paru
+# Add paru rust dependency
+sudo pacman -S cargo
+
+# Clone paru in local opt directory
 mkdir -p ~/.local/opt && cd ~/.local/opt
 git clone https://aur.archlinux.org/paru.git
 cd paru
-makepkg -si
 
+# Build and install package
+makepkg -si
+```
+
+## Install user dependencies
+
+```shell
 # Install audio dependencies
 paru -S pulseaudio pulseaudio-alsa
 
 # Install X11 server
 paru -S xorg xorg-xinit xorg-server
 
-# Install video card relevant for your hardware
+# Optional: Install video card relevant for your hardware
 paru -S xf86-video-intel
 
 # Optional: install guest utils if installing in virtualbox
 paru -S virtualbox-guest-utils
 ```
-## Add configuration
+
+## Add configurations
 
 Now that there is a fresh install of Arch, you can add whatever desktop environment you want (i3, gnome, kde, etc.). I have detailed how I setup my environment in my [dotfiles](https://github.com/logan-connolly/dotfiles) if you are interested.
