@@ -6,20 +6,23 @@
     user: archie
     group: users
   tasks:
-    - name: Make sure we have a 'wheel' group
+    - name: Make sure we have a wheel group
       group:
         name: wheel
         state: present
-
-    - name: Add user and group
-      user:
-        name: '{{ user }}'
-        group: '{{ group }}'
-        shell: /usr/bin/zsh
-
-    - name: Add user to wheel group
+        
+    - name: Allow wheel group to run sudo commands
       lineinfile:
         path: /etc/sudoers
         state: present
         regexp: '^# %wheel ALL=(ALL) ALL'
         line: '%wheel ALL=(ALL) ALL'
+
+    - name: Create user and add to wheel group
+      user:
+        name: '{{ user }}'
+        group: '{{ group }}'
+        groups: 'wheel'
+        shell: /usr/bin/zsh
+
+
