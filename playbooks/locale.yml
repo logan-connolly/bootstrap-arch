@@ -13,12 +13,15 @@
         replace: 'en_US.UTF-8 UTF-8'
 
     - name: Generate locale
-      shell: locale-gen
+      command: locale-gen
 
     - name: Configure locale.conf
-      shell: echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+      lineinfile:
+        path: /etc/locale.conf
+        line: 'LANG=en_US.UTF-8'
+        create: yes
 
-    - name: Add hostname
+    - name: Configure hostname
       lineinfile:
         path: /etc/hosts
         line: '127.0.1.1 localhost.localdomain {{ hostname }}'

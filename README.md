@@ -27,10 +27,7 @@ mkfs.ext4 /dev/sdX2
 mount /dev/sdX2 /mnt
 
 # Install system-wide dependencies
-system_deps="base base-devel linux linux-firmware"
-bootstrap_deps="sudo vim zsh git ansible networkmanager"
-boot_deps="grub efibootmgr"
-pacstrap -i /mnt $system_deps $bootstrap_deps $boot_deps
+pacstrap -i /mnt base base-devel linux linux-firmware sudo vim zsh
 
 # Generate fstab file for attaching devices at startup
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -44,6 +41,10 @@ passwd
 ## Clone repository
 
 ```shell
+# Install dependencies need for running playbooks
+pacman -S git ansible
+
+# Clone and cd into dir
 cd /opt/
 git clone https://github.com/logan-connolly/bootstrap-arch.git
 cd bootstrap-arch
@@ -54,8 +55,16 @@ cd bootstrap-arch
 # Setup locale configuration
 ansible-playbook ./playbooks/locale.yml
 
-# Setup grub to be able to boot
+# Setup network configuration
+ansible-playbook ./playbooks/network.yml
+
+# Setup grub to be able to boot into OS
 ansible-playbook ./playbooks/grub.yml
+
+# Exit out, unmount, reboot and login this time as root
+exit
+unmount -R /mnt
+reboot
 
 # Create swap file
 ansible-playbook ./playbooks/swap.yml
@@ -66,7 +75,7 @@ ansible-playbook ./playbooks/user.yml
 # Add passwd for newly created user (archie)
 passwd archie
 
-# Exit out and login as non-root user
+# exit again and login to newly created `archie` user
 exit
 ```
 ## Install user dependencies

@@ -1,0 +1,15 @@
+---
+- name: Setup network manager
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Install network manager
+      pacman:
+        name: networkmanager
+        state: present
+
+    - name: Enable networking manager service
+      systemd:
+        name: NetworkManager.service
+        state: started
+        enabled: yes

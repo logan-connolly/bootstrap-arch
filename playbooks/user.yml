@@ -14,9 +14,8 @@
     - name: Add user and group
       user:
         name: '{{ user }}'
-        password: changeme
-        shell: /usr/bin/zsh
         group: '{{ group }}'
+        shell: /usr/bin/zsh
 
     - name: Add user to wheel group
       lineinfile:
@@ -24,6 +23,3 @@
         state: present
         regexp: '^# %wheel ALL=(ALL) ALL'
         line: '%wheel ALL=(ALL) ALL'
-
-    - name: Enable networking manager
-      command: systemctl enable NetworkManger.service

@@ -6,6 +6,13 @@
     boot_directory: /boot/efi
     boot_partition: /dev/sda1
   tasks:
+    - name: Install boot dependencies
+      pacman:
+        name:
+          - grub
+          - efibootmgr
+        state: present
+
     - name: Create directory for boot
       file:
         dest: '{{ boot_directory }}'
