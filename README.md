@@ -27,13 +27,13 @@ mkfs.ext4 /dev/sdX2
 mount /dev/sdX2 /mnt
 
 # Install system-wide dependencies
-pacstrap -i /mnt base base-devel linux linux-firmware sudo vim zsh
+pacstrap -i /mnt base base-devel linux linux-firmware sudo vim fish
 
 # Generate fstab file for attaching devices at startup
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
 # Change to system as root
-arch-chroot /mnt /usr/bin/zsh
+arch-chroot /mnt /usr/bin/fish
 
 # Set root password
 passwd

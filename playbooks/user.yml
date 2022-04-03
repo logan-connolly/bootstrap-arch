@@ -10,19 +10,17 @@
       group:
         name: wheel
         state: present
-        
+
     - name: Allow wheel group to run sudo commands
       lineinfile:
         path: /etc/sudoers
         state: present
-        regexp: '^# %wheel ALL=(ALL) ALL'
-        line: '%wheel ALL=(ALL) ALL'
+        regexp: "^# %wheel ALL=(ALL) ALL"
+        line: "%wheel ALL=(ALL) ALL"
 
     - name: Create user and add to wheel group
       user:
-        name: '{{ user }}'
-        group: '{{ group }}'
-        groups: 'wheel'
-        shell: /usr/bin/zsh
-
-
+        name: "{{ user }}"
+        group: "{{ group }}"
+        groups: "wheel"
+        shell: /usr/bin/fish
